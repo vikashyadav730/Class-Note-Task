@@ -1,0 +1,42 @@
+import pandas as pd
+import numpy as np
+dataset = pd.read_csv(r"Sample input data.txt",encoding="ansi",
+                          skiprows=[0],header=None,engine="python",delimiter='\|\|')
+dataset.rename(columns={1:'tablename'}, inplace=True)
+dataset.rename(columns={2:'win_nbr'}, inplace=True)
+dataset.rename(columns={3:'national_id'}, inplace=True)
+dataset.rename(columns={11:'asc_userid'}, inplace=True)
+dataset.rename(columns={12:'birth_date'}, inplace=True)
+dataset[['national_id', 'win_nbr', 'asc_userid']] = dataset[['national_id', 'win_nbr', 'asc_userid']].astype(str)
+dataset['national_id'] = dataset['national_id'].str[2:]
+dataset['national_id'] = dataset['national_id'].apply(lambda x: '{0:0>7}'.format(x))
+
+data1 = pd.read_csv(r"SQLDBout2.txt",encoding="ansi",header=0,engine="python",delimiter='|')
+data1.drop('Unnamed: 0',axis=1,inplace=True)
+data1.rename(columns={1: 'national_id'}, inplace=True)
+data1.rename(columns={2: 'win_nbr'}, inplace=True)
+data1.rename(columns={3: 'asc_userid'}, inplace=True)
+
+data1['national_id'] = data1['national_id'].apply(lambda x: '{0:0>7}'.format(x))
+data1[['national_id', 'win_nbr', 'asc_userid']] = data1[['national_id', 'win_nbr', 'asc_userid']].astype(str)
+
+# print(dataset.dtypes.head(15))
+# print(data1.dtypes)
+# dd = dataset.loc[(dataset['tablename']=='BASIC') & (dataset['national_id'].isin(data1['national_id'])) & (dataset['win_nbr'].isin(data1['win_nbr']))]
+# dd = dd.loc[(dataset['asc_userid'].isin(data1['asc_userid']))]
+# print(dd)
+dd1 = dataset[(((dataset['tablename']=='BASIC') | (dataset['tablename']=='EXCEPTION')) &
+              (dataset['national_id'].isin(data1['national_id'])) & (dataset['win_nbr'].isin(data1['win_nbr'])) |
+              (dataset['asc_userid'].isin(data1['asc_userid'])))]
+# print(dd1)
+dd2 = dataset[(((dataset['tablename']=='PAY') | (dataset['tablename']=='JOB')) &
+              (dataset['national_id'].isin(data1['national_id'])) & (dataset['win_nbr'].isin(data1['win_nbr'])))]
+final = pd.concat([dd1,dd2])
+final1 = final.sort_index()
+total_record = len(dataset)
+matching_record = len(final1)
+Nonmatching_record = total_record-matching_record
+
+print("total no of record : {}".format(total_record))
+print("matching record : {}".format(matching_record))
+print("Non matching record : {}".format(Nonmatching_record))

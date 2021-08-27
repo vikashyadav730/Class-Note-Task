@@ -1,0 +1,10 @@
+1. Write a Python program to find those numbers which are divisible by 7 and multiple of 5, between 1500 and 2700
+2. to make small to capital
+3.Write a Python program that accepts a word from the user and reverse it.
+4.Write a Python program to find the even and odd numbers from a given values from user.
+5.Write a Python program that prints all the numbers from 0 to 6 except 3 and 6.
+6.Accept number from user and calculate the sum of all number from 1 to a given number
+7.Given a number count the total number of digits in a number
+8.Display numbers from -10 to -1 using for loop
+9.Write a loop to find the factorial of any number
+10.Reverse a given integer number
